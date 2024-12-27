@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama', 255);
             $table->string('kota', 255);
             $table->string('pickup_location', 255);
-            $table->integer('no_telp');
+            $table->string('no_telp');
             $table->integer('usia');
             $table->integer('tahun_lahir');
             $table->timestamps(); // created_at & updated_at
@@ -27,4 +27,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+    public function down(): void {
+        Schema::dropIfExists('penumpang');
+    }
 };

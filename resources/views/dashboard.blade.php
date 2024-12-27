@@ -53,7 +53,32 @@
             </div>
         </div>
         <div class="d-flex flex-wrap row-gap-3 gap-2 mb-3 py-2">
-            @for ($i = 0; $i < 3; $i++)      
+            @foreach ($passengers as $passenger)      
+                <div class="bg-white rounded shadow-sm p-2">
+                    <h3 class="mx-2">{{$passenger->nama}}</h3>
+                    <small class="mx-2">Service</small>
+                    <p class="mx-2">Trip to {{$passenger->kota}}</p>
+                    <div class="d-flex justify-content-between mx-2">
+                        <div>
+                            <small>Date</small>
+                            <p class="mb-0">25 Jul 2020</p>
+                        </div>
+                        <div>
+                            <small>Time</small>
+                            <p class="mb-0">11:00 - 12:00</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mx-2">
+                        <div>
+                            <p class="text-primary-emphasis">Close Booking</p>
+                        </div>
+                        <div>
+                            <p class="text-secondary">Reject</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
                 <div class="bg-white rounded shadow-sm p-2">
                     <h3 class="mx-2">Amanda Chavez</h3>
                     <small class="mx-2">Service</small>
@@ -78,7 +103,6 @@
                         </div>
                     </div>
                 </div>
-            @endfor
         </div>
     </div>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -113,13 +137,13 @@
                         <label class="form-label" for="exampleCheck1">Whatsapp Number</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">+62</span>
-                            <input type="number" class="form-control" placeholder="number" aria-label="no_telp" aria-describedby="basic-addon1">
+                            <input type="number" class="form-control" placeholder="number" name="no_telp" aria-label="no_telp" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-1">
                         <button type="button" class="btn btn-outline-secondary">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
           </div>

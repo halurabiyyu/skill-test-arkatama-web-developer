@@ -10,7 +10,7 @@ class PassengerController extends Controller
     public function index()
     {
         $passengers = Passenger::all();
-        return view('passengers.index', compact('passengers'));
+        return view('dashboard', compact('passengers'));
     }
 
     public function create()
@@ -20,44 +20,51 @@ class PassengerController extends Controller
 
     public function store(Request $request)
     {   
-        $request->validate([
-            'kode_booking' => 'required|string|max:255',
-            'data_penumpang' => 'required|string',
-            'no_telp' => 'required|integer',
-            'pickup_location' => 'required|string|max:255',
-        ]);
+        try {
+            // Validasi input
+            $request->validate([
+                'kode_booking' => 'required|string|max:255',
+                'data_penumpang' => 'required|string',
+                'no_telp' => 'required|string',
+                'pickup_location' => 'required|string|max:255',
+            ]);
 
-        // Memproses input data penumpang
-        $data = explode(' ', $request->data_penumpang);
-        if (count($data) < 3) {
-            echo "Format input tidak valid. Gunakan format: NAMA USIA KOTA";
-            return redirect()->route('dashboard')->with('error', 'Format input tidak valid. Gunakan format: NAMA USIA KOTA');
+            // Debugging input
+
+            // Memproses input data penumpang
+            $data = explode(' ', $request->data_penumpang);
+            if (count($data) < 3) {
+                return redirect()->back()->with('error', 'Format input tidak valid. Gunakan format: NAMA USIA KOTA');
+            }
+
+            $nama = $data[0];
+            $usia = (int)$data[1];
+            $kota = $data[2];
+
+            if (!is_numeric($usia)) {
+                return redirect()->back()->with('error', 'Usia harus berupa angka.');
+            }
+
+            $tahun_lahir = date('Y') - $usia;
+
+            // Simpan data ke database
+            Passenger::create([
+                'kode_booking' => $request->kode_booking,
+                'nama' => $nama,
+                'kota' => $kota,
+                'pickup_location' => $request->pickup_location,
+                'no_telp' => $request->no_telp,
+                'usia' => $usia,
+                'tahun_lahir' => $tahun_lahir
+            ]);
+
+
+            return redirect()->route('dashboard')->with('success', 'Passenger created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.' . $e->getMessage());
         }
-
-        $nama = $data[0];
-        $usia = (int)$data[1];
-        $kota = $data[2];
-
-        // Validasi tambahan
-        if (!is_numeric($usia)) {
-            echo "Usia harus berupa angka.";
-            return redirect()->back()->with('error', 'Usia harus berupa angka.');
-        }
-
-        $tahun_lahir = date('Y') - $usia;
-
-        Passenger::create([
-            'kode_booking' => $request->kode_booking,
-            'no_telp' => $request->no_telp,
-            'pickup_location' => $request->pickup_location,
-            'nama' => $nama,
-            'kota' => $kota,
-            'usia' => $usia,
-            'tahun_lahir' => $tahun_lahir
-        ]);
-
-        return redirect()->route('dashboard')->with('success', 'Passenger created successfully.');
     }
+
 
     public function show($id)
     {
